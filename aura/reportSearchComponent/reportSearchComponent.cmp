@@ -1,0 +1,9 @@
+<aura:component >
+	<aura:registerEvent name="rLoadEvent" type="c:reportLoadEvent"/>   
+	<aura:attribute name="report" type="Report"/>
+
+    <li class="slds-dropdown__item slds-has-icon--left" role="menuitem option">
+        <a href="javascript:void(0);" onclick="{!c.showReport}" class="slds-truncate">{!v.report.Name}</a>  
+    </li>    
+    
+</aura:component>

@@ -1,0 +1,11 @@
+<aura:component access="GLOBAL">
+    <aura:attribute access="GLOBAL" name="isVisible" type="Boolean" default="true" description="Specifies whether or not this spinner should be visible. Defaults to true."/>
+    <aura:registerEvent access="GLOBAL" name="toggle" type="c:toggleLoadingIndicator" description="The event fired when the spinner is toggled."/>
+    <aura:handler name="toggle" action="{!c.toggleSpinner}"/>
+    
+    <div aura:id='spinner' role="alert" class="{!v.class + ' spinner2 ' + (v.isVisible == true ? '': 'hideEl')}">
+        <div class="slds-spinner--large">
+            <img src="/resource/DF15LIGHTNING__slds080/assets/images/spinners/slds_spinner_brand.gif" alt="Loading..." />
+        </div>
+    </div>
+</aura:component>

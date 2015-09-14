@@ -1,0 +1,110 @@
+<aura:component controller="LightningReportsController" implements="force:appHostable">
+
+    <ltng:require styles="/resource/DF15LIGHTNING__slds080/assets/styles/salesforce-lightning-design-system-vf.css"
+                  afterScriptsLoaded="{!c.doInit}"/>    
+    
+    <!-- Handle loading events by displaying a spinner -->
+    <aura:handler event="aura:waiting" action="{!c.showSpinner}"/>
+    <aura:handler event="aura:doneWaiting" action="{!c.hideSpinner}"/>
+    
+    <!-- Handle loading a report which was clicked on -->
+    <aura:handler event="c:reportLoadEvent" action="{!c.loadReport}"/>    
+
+    <!-- all available reports -->
+    <aura:attribute name="reportListAll" type="Report[]"/>    
+    
+    <!-- reports matching search -->
+    <aura:attribute name="reportList" type="Report[]"/>
+
+    <!-- Dynamically load the report rows -->
+    <aura:attribute name="reportResponse" type="Object"/>    
+    
+    
+    <div class="slds">
+
+        <c:spinner aura:id="spinner"/>
+        
+        <div class="slds-page-header">
+            <div class="slds-grid">
+                <div class="slds-col slds-has-flexi-truncate">
+                    <div class="slds-grid">
+                        <div class="slds-grid slds-no-space">
+
+                            <div class="slds-media">
+								<span class="slds-icon__container">
+									<c:svgIcon svgPath="/resource/DF15LIGHTNING__slds080/assets/icons/custom-sprite/svg/symbols.svg#custom9" class="slds-icon icon__svg slds-icon-custom-9 slds-icon--medium" name="custom-9" size="medium" category="custom" containerClass="slds-icon__container"/>                                      	
+                                </span>                                
+                            </div>
+                                
+                            <div class="slds-media__body">
+                                <div class="slds-lookup" data-select="multi" data-scope="single" data-typeahead="true">
+                                    <div class="slds-form-element">
+                                        <div class="slds-lookup__control slds-input-has-icon slds-input-has-icon--right">
+                                            <c:svgIcon svgPath="/resource/DF15LIGHTNING__slds080/assets/icons/utility-sprite/svg/symbols.svg#search" class="slds-input__icon" />
+                                            <ui:inputText aura:id="searchReports" placeholder="Search Reports..." keyup="{!c.doReportSearch}" updateOn="keyup" class="slds-input"/>
+                                        </div>
+                                    </div>
+                                    
+                                    <aura:renderIf isTrue="{!v.reportList.length == 0 ? false : true}">   
+                                        <div class="slds-lookup__menu" role="listbox">
+                                            <ul class="slds-lookup__list" role="presentation">
+                                                <aura:iteration var="report" items="{!v.reportList}">
+                                                    <c:reportSearchComponent report="{!report}" />
+                                                </aura:iteration>
+                                            </ul>
+                                        </div>
+                                    </aura:renderIf>
+                                    
+                                </div>      
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            
+            
+            <!-- this is how tabular and matrix reports are displayed -->
+            <!-- Iterate over the list of report rows and display them -->
+            <!-- special case for the header row -->
+            <br/>
+            <div class="slds-scrollable--x">
+                <table class="{!'slds-table slds-table--bordered slds-max-medium-table--stacked' + (v.reportResponse.reportType == 'summary' ? '' : ' slds-table--striped')}">
+                    
+                    <aura:renderIf isTrue="{!v.reportResponse.reportType == 'summary' ? false : true}">
+                        <thead>
+                            <c:reportRowComponent row="{!v.reportResponse.tabResp.reportFields}" isHeader="true"/>
+                        </thead>
+                        <tbody>
+                            <aura:iteration var="row" items="{!v.reportResponse.tabResp.fieldDataList}">
+                                <c:reportRowComponent row="{!row}" isHeader="false"/>
+                            </aura:iteration>
+                        </tbody>
+                        <aura:set attribute="else">
+                            <!-- this is how summary reports are displayed -->
+                            <thead>
+                                <c:reportRowComponent row="{!v.reportResponse.sumResp.reportFields}" isHeader="true"/>
+                            </thead>
+                            <tbody>
+                                <aura:iteration var="group" items="{!v.reportResponse.sumResp.groupList}">
+                                    <c:reportGroupComponent group="{!group}"/>
+                                </aura:iteration>
+                            </tbody>
+                            
+                        </aura:set>
+                    </aura:renderIf>   
+                    
+                </table>
+            </div>   
+            
+        </div>
+        
+        
+        
+        
+    </div>
+    
+    
+    
+</aura:component>

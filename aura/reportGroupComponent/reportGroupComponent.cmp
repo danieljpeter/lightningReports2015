@@ -1,0 +1,29 @@
+<aura:component >
+	<aura:attribute name="group" type="Object"/>
+    
+    <tr class="slds-text-heading--label">
+        <td class="group" colspan="{!v.group.fieldsInGroup}">
+            <b>{!v.group.fieldName}: </b>
+            <aura:renderIf isTrue="{!v.group.isHyperLink}">
+                <c:sobjectHyperlink sObjectId="{!v.group.fieldValue}" hyperlinkLabel="{!v.group.fieldLabel}"/>
+                <aura:set attribute="else">{!v.group.fieldLabel}</aura:set>                        
+            </aura:renderIf>            
+        </td>
+    </tr>
+    
+    <aura:iteration var="row" items="{!v.group.fieldDataList}">  
+        <tr class="slds-text-heading--label">
+            <aura:iteration var="cell" items="{!row}">
+                <td data-label="{!cell.heading}">
+                    <aura:renderIf isTrue="{!cell.isHyperLink}">
+                        <c:sobjectHyperlink sObjectId="{!cell.fieldValue}" hyperlinkLabel="{!cell.fieldLabel}"/>
+                        <aura:set attribute="else">{!cell.fieldLabel}</aura:set>                        
+                    </aura:renderIf>                            
+                </td>
+            </aura:iteration>
+        </tr>
+    </aura:iteration>
+
+        
+
+</aura:component>

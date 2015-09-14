@@ -1,0 +1,22 @@
+<aura:component >
+	<aura:attribute name="row" type="Object[]"/>
+    <aura:attribute name="isHeader" type="Boolean"/>
+    
+    <tr class="slds-text-heading--label">
+        <aura:iteration var="cell" indexVar="counter" items="{!v.row}">
+            <aura:renderIf isTrue="{!v.isHeader}">
+                <th scope="col">{!cell.fieldLabel}</th>
+                <aura:set attribute="else">
+                    <td class="" data-label="{!cell.heading}">
+                        <aura:renderIf isTrue="{!cell.isHyperLink}">
+                            <c:sobjectHyperlink sObjectId="{!cell.fieldValue}" hyperlinkLabel="{!cell.fieldLabel}"/>
+                        	<aura:set attribute="else">{!cell.fieldLabel}</aura:set>                        
+						</aura:renderIf>                        
+                    </td>  
+                </aura:set>
+            </aura:renderIf>
+            
+        </aura:iteration>
+    </tr>       
+
+</aura:component>
